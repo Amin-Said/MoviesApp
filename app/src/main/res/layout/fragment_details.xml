@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layoutDirection="ltr"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.details.DetailsFragment">
+
+
+    <ImageView
+        android:id="@+id/posterDetailsIV"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/poster_details_height"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:scaleType="centerCrop"
+        app:layout_constraintTop_toTopOf="parent"
+         />
+
+    <TextView
+        android:id="@+id/titleTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_from_borders"
+        android:layout_marginTop="@dimen/space_from_borders"
+        android:layout_marginEnd="@dimen/space_from_borders"
+        android:textStyle="bold"
+        android:textColor="@color/black"
+        android:textSize="@dimen/movie_font_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/posterDetailsIV" />
+
+    <TextView
+        android:id="@+id/releaseDateTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_from_borders"
+        android:layout_marginTop="@dimen/space_from_borders"
+        android:layout_marginEnd="@dimen/space_from_borders"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleTV" />
+
+    <TextView
+        android:id="@+id/popularityTV"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_from_borders"
+        android:layout_marginTop="@dimen/space_from_borders"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/releaseDateTV" />
+
+    <TextView
+        android:id="@+id/voteAverageTV"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_from_borders"
+        android:layout_marginTop="@dimen/space_from_borders"
+        android:layout_marginEnd="@dimen/space_from_borders"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/popularityTV"
+        app:layout_constraintTop_toBottomOf="@+id/releaseDateTV" />
+
+    <TextView
+        android:id="@+id/overviewTV"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/space_from_borders"
+        android:layout_marginTop="@dimen/space_from_borders"
+        android:layout_marginEnd="@dimen/space_from_borders"
+        app:layout_constraintBottom_toTopOf="@+id/viewPosterAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/voteAverageTV" />
+
+    <Button
+        android:id="@+id/viewPosterAction"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_from_borders"
+        android:layout_marginEnd="@dimen/space_from_borders"
+        android:layout_marginBottom="@dimen/space_from_borders"
+        android:text="@string/viewPosterAction"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

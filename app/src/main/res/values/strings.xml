@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">MoviesApp</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_search_msg">Find Your Next Movie</string>
+    <string name="no_network_error">No internet Available</string>
+    <string name="request_error">Request Error</string>
+    <string name="network_error">Network Error</string>
+    <string name="original_lang">"Original Language : "</string>
+    <string name="viewPosterAction">View Full Poster</string>
+    <string name="vote_average">"Rate : "</string>
+    <string name="release_date">"Release Date : "</string>
+</resources>
