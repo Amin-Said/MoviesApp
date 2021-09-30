@@ -1,16 +1,13 @@
 package com.amin.moviesapp.ui.home
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView
-import android.widget.Toast
 import androidx.annotation.VisibleForTesting
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.amin.moviesapp.R
@@ -23,14 +20,24 @@ import com.amin.moviesapp.utils.extensions.isOnline
 import com.amin.moviesapp.utils.extensions.toast
 import com.amin.moviesapp.viewmodel.home.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.*
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction {
+class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction, CoroutineScope {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
+    private lateinit var job: Job
+
+    @ExperimentalCoroutinesApi
+    val query = MutableStateFlow("")
+    private var lastQuery = ""
 
     private var mSearchAdapter: SearchedMoviesRecyclerAdapter? = null
 
@@ -48,12 +55,16 @@ class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction {
     }
 
     override fun onDestroyView() {
+        job.cancel()
         super.onDestroyView()
         _binding = null
     }
 
+    @ExperimentalCoroutinesApi
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        job = Job()
 
         handleSearchQuery()
     }
@@ -76,6 +87,7 @@ class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction {
         }
     }
 
+    @ExperimentalCoroutinesApi
     private fun handleSearchQuery() {
         binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
@@ -91,7 +103,10 @@ class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction {
                     binding.welcomeMsg.visibility = View.GONE
                     binding.avi.smoothToShow()
                     binding.moviesRV.visibility = View.VISIBLE
-                    requestSearchData(newText)
+                    query.value = newText
+                    launch {
+                        handleQueryChanges()
+                    }
 
                 } else {
                     binding.welcomeMsg.visibility = View.VISIBLE
@@ -107,18 +122,38 @@ class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction {
         })
     }
 
+    suspend fun handleQueryChanges() {
+        query.debounce(500)
+            .filter { query ->
+                return@filter query.isNotEmpty()
+            }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+            .collect { saveQuery ->
+                if (lastQuery != saveQuery) {
+                    lastQuery = saveQuery
+                    requestSearchData(saveQuery)
+                    resetLastQueryAfterTime()
+                }
+            }
+    }
+
+    private suspend fun resetLastQueryAfterTime() {
+        delay(500)
+        lastQuery = ""
+    }
 
 
     private fun requestSearchData(query: String) {
         try {
-            if (requireActivity().isOnline()){
+            if (requireActivity().isOnline()) {
                 initSearchRecyclerView()
                 observeSearchResultLiveData(query)
-            }else{
+            } else {
                 handleErrorNetworkState()
             }
 
-        }catch (e:Exception){
+        } catch (e: Exception) {
             e.printStackTrace()
         }
 
@@ -157,11 +192,11 @@ class HomeFragment : Fragment(), SearchedMoviesRecyclerAdapter.Interaction {
         }
     }
 
-    fun handleErrorNetworkState(){
+    private fun handleErrorNetworkState() {
         requireActivity().toast(getString(R.string.network_error))
     }
 
-    fun handleRequestError(){
+    private fun handleRequestError() {
         requireActivity().toast(getString(R.string.request_error))
     }
 

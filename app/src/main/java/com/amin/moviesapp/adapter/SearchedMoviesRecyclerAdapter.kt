@@ -1,14 +1,18 @@
 package com.amin.moviesapp.adapter
 
+import android.os.Build
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.view.animation.AccelerateInterpolator
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import com.amin.moviesapp.R
 import com.amin.moviesapp.databinding.MovieItemBinding
 import com.amin.moviesapp.model.Result
 import com.amin.moviesapp.utils.Config
+import com.amin.moviesapp.utils.extensions.addAnimation
 import com.amin.moviesapp.utils.extensions.setImageWithPicasso
 
 class SearchedMoviesRecyclerAdapter(private val interaction: Interaction? = null) :
@@ -77,6 +81,13 @@ class SearchedMoviesRecyclerAdapter(private val interaction: Interaction? = null
 
 
         }
+    }
+
+    var lastPosition = -1
+    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
+        super.onViewAttachedToWindow(holder)
+        holder.addAnimation(AccelerateInterpolator(),lastPosition,300)
+
     }
 
     interface Interaction {

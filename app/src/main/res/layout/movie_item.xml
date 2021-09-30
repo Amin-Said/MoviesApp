@@ -21,6 +21,7 @@
             android:layout_width="@dimen/poster_item_width"
             android:layout_height="@dimen/poster_item_height"
             android:scaleType="centerCrop"
+            android:src="@drawable/error"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

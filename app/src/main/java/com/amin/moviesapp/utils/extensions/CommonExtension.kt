@@ -14,6 +14,7 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 
 import androidx.recyclerview.widget.RecyclerView
+import com.amin.moviesapp.R
 import com.squareup.picasso.Callback
 import com.squareup.picasso.NetworkPolicy
 import com.squareup.picasso.Picasso
@@ -60,6 +61,8 @@ fun ImageView.setImageWithPicasso(sourceUrl:String){
     val imageView = this
     Picasso.get()
         .load(sourceUrl)
+        .placeholder(R.drawable.progress_animation)
+        .error(R.drawable.error)
         .networkPolicy(NetworkPolicy.OFFLINE)
         .into(imageView, object : Callback {
             override fun onSuccess() {}
@@ -69,6 +72,8 @@ fun ImageView.setImageWithPicasso(sourceUrl:String){
                 Log.v("Picasso","Could not fetch image ${e.message}");
                 Picasso.get()
                     .load(sourceUrl)
+                    .placeholder(R.drawable.progress_animation)
+                    .error(R.drawable.error)
                     .into(imageView, object : Callback {
                         override fun onSuccess() {}
                         override fun onError(e: Exception) {
